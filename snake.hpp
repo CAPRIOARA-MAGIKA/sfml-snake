@@ -27,7 +27,7 @@ class Snake{
         void grow();
 
         void update(float dt);
-        void render(sf::RenderWindow& window);
+        void render(sf::RenderWindow& window, float dt);
 
     private:
 
@@ -43,5 +43,5 @@ class Snake{
         int segment;
 
         void moveHead(float dt);
-        void getPosAndRot();
+        TransformSegment getPosAndRot(int segmentIndex, float dt);
 };

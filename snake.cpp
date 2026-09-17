@@ -3,7 +3,7 @@
 Snake::Snake() 
     : direction(Direction::UP), 
       directionMoved(0.0f),
-      segment(0)
+      segment(GameConfig::STARTING_SEGMENTS)
 {      
 
 }
@@ -86,17 +86,40 @@ void Snake::update(float dt){
             GameConfig::OFFSET_Y + std::round((currentPosition.y - GameConfig::OFFSET_Y - GameConfig::CELL_SIZE / 2.0f) / GameConfig::CELL_SIZE) * GameConfig::CELL_SIZE + GameConfig::CELL_SIZE / 2.0f
         });
     }
+
+    unsigned int maxHistory = (segment + 2) * (GameConfig::CELL_SIZE / (GameConfig::SNAKE_SPEED * dt + 0.001f));
+    if(maxHistory < headPastPos.size()){
+        headPastPos.pop_back();
+    }
 }
 
-void Snake::getPosAndRot(){
-    
+TransformSegment Snake::getPosAndRot(int segmentIndex, float dt){
+    float distancePerFrame = GameConfig::SNAKE_SPEED * dt;
+    if(distancePerFrame <= 0.0f){
+        return headPastPos.front();
+    }
+
+    int framesPerCell = static_cast<int>(GameConfig::CELL_SIZE / distancePerFrame);
+    unsigned int historyIndex = framesPerCell * segmentIndex;
+
+    if(historyIndex >= headPastPos.size()){
+        return headPastPos.back();
+    }
+
+    return headPastPos[historyIndex];
 }
 
-void Snake::render(sf::RenderWindow& window){
+void Snake::render(sf::RenderWindow& window, float dt){
     if(segment > 0 && !headPastPos.empty()){
-        for(int i = 1; i<=segment; i++){
-            bodySprite->setPosition()
+        for(int i = segment; i >= 1; --i){
+            TransformSegment bodyState = getPosAndRot(i, dt);
+            bodySprite->setPosition(bodyState.position);
+            bodySprite->setRotation(bodyState.rotation);
+            window.draw(*bodySprite);
         }
     }
     window.draw(*headSprite);
 }
+
+
+//Ca sa faci Colision cu snake trb sa verifici daca un trunchi intra in cap, nu daca capul intra in trunchi.

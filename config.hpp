@@ -12,6 +12,7 @@ namespace GameConfig{
     constexpr unsigned int NUMBER_CELLS_Y = 15;
 
     constexpr float SNAKE_SPEED = 256.0f;
+    constexpr int STARTING_SEGMENTS = 3;
 
     constexpr unsigned int SNAKE_START_CELL_X = 9;
     constexpr unsigned int SNAKE_START_CELL_Y = 7;

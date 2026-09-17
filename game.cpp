@@ -70,14 +70,14 @@ void Game::run(){
 
         update(dt);
 
-        render();
+        render(dt);
     }
 }
 
-void Game::render(){
+void Game::render(float dt){
     window.clear();
     window.draw(*bgSprite);
-    snake.render(window);
+    snake.render(window, dt);
     food.render(window);
     window.display();
 }
