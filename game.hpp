@@ -24,6 +24,7 @@ class Game{
         void getDirectionInput(const sf::Event& event);
         void handleClose(const sf::Event& event);
         bool foodEaten();
+        void checkGameOver();
         
         void update(float dt);
         

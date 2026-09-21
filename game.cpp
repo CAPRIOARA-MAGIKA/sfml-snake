@@ -70,7 +70,12 @@ void Game::run(){
 
         update(dt);
 
+        if(isGameOver){
+            break;
+        }
+
         render(dt);
+
     }
 }
 
@@ -90,7 +95,14 @@ bool Game::foodEaten(){
     return false;
 }
 
+void Game::checkGameOver(){
+    if(snake.isSnakeDead){
+        isGameOver = true;
+    }
+}
+
 void Game::update(float dt){
+    checkGameOver();
     snake.update(dt);
     if(foodEaten()){
         food.update();

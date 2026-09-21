@@ -1,9 +1,11 @@
 #include "snake.hpp"
 
 Snake::Snake() 
-    : direction(Direction::UP), 
+    : direction(Direction::UP),
+      nextDirection(Direction::UP), 
       directionMoved(0.0f),
-      segment(GameConfig::STARTING_SEGMENTS)
+      segment(GameConfig::STARTING_SEGMENTS),
+      isSnakeDead(false)
 {      
 
 }
@@ -69,6 +71,8 @@ void Snake::grow(){
 
 void Snake::update(float dt){
     moveHead(dt);
+    checkForCollisionWall();
+    checkForCollisionBody(dt);
     
     TransformSegment headState;
     headState.position = headSprite->getPosition();
@@ -90,6 +94,34 @@ void Snake::update(float dt){
     unsigned int maxHistory = (segment + 2) * (GameConfig::CELL_SIZE / (GameConfig::SNAKE_SPEED * dt + 0.001f));
     if(maxHistory < headPastPos.size()){
         headPastPos.pop_back();
+    }
+}
+
+void Snake::checkForCollisionWall(){
+    float headXPos = getHeadPos().x;
+    float headYPos = getHeadPos().y;
+    if(headXPos < GameConfig::OFFSET_X ||
+       headXPos > GameConfig::OFFSET_X + GameConfig::NUMBER_CELLS_X * GameConfig::CELL_SIZE ||
+       headYPos < GameConfig::OFFSET_Y ||
+       headYPos > GameConfig::OFFSET_Y + GameConfig::NUMBER_CELLS_Y * GameConfig::CELL_SIZE
+    ) {
+        isSnakeDead = true;
+    }
+}
+
+void Snake::checkForCollisionBody(float dt){
+    int minSegmente = 4;
+
+    for(int i = minSegmente; i < segment; ++i){
+        TransformSegment bodyState = getPosAndRot(i, dt);
+        sf::Vector2f diff = headSprite->getPosition() - bodyState.position;
+        float diffSquare = diff.x * diff.x + diff.y * diff.y;
+
+        float collisionRadius = GameConfig::CELL_SIZE * 0.4f;
+        if(diffSquare < collisionRadius * collisionRadius){
+            isSnakeDead = true;
+            return;
+        }
     }
 }
 

@@ -25,6 +25,7 @@ class Snake{
 
         void setDirection(Direction dir);
         void grow();
+        bool isSnakeDead;
 
         void update(float dt);
         void render(sf::RenderWindow& window, float dt);
@@ -44,4 +45,6 @@ class Snake{
 
         void moveHead(float dt);
         TransformSegment getPosAndRot(int segmentIndex, float dt);
+        void checkForCollisionWall();
+        void checkForCollisionBody(float dt);
 };
