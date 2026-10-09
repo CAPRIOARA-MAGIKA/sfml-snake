@@ -152,6 +152,3 @@ void Snake::render(sf::RenderWindow& window, float dt){
     }
     window.draw(*headSprite);
 }
-
-
-//Ca sa faci Colision cu snake trb sa verifici daca un trunchi intra in cap, nu daca capul intra in trunchi.

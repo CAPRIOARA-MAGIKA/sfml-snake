@@ -24,6 +24,10 @@ bool Game::init(){
         std::cerr << "Failed to initialize background texture!\n";
         return false;
     }
+    if(!endScreenInit()){
+        std::cerr << "Failed to initialize Text\n";
+        return false;
+    }
     return true;
 }
 
@@ -34,6 +38,20 @@ bool Game::gameInit(){
     
     bgSprite.emplace(bgTexture);
     
+    return true;
+}
+
+bool Game::endScreenInit(){
+    if(!font.openFromFile("arial.ttf")){
+        return false;
+    }
+
+    gameOverText.emplace(font, "GAME OVER");
+    gameOverText->setFillColor(sf::Color::Red);
+    gameOverText->setStyle(sf::Text::Bold);
+    gameOverText->setPosition({GameConfig::WINDOW_RESOLUTION_X / 2, GameConfig::WINDOW_RESOLUTION_Y / 3});
+    gameOverText->setCharacterSize(60);
+
     return true;
 }
 
@@ -71,6 +89,8 @@ void Game::run(){
         update(dt);
 
         if(isGameOver){
+            showEndScreen();
+            sf::sleep(sf::seconds(5.0f));
             break;
         }
 
@@ -84,6 +104,14 @@ void Game::render(float dt){
     window.draw(*bgSprite);
     snake.render(window, dt);
     food.render(window);
+    window.display();
+}
+
+void Game::showEndScreen(){
+    window.clear(sf::Color::White);
+    
+    window.draw(*gameOverText);
+
     window.display();
 }
 
@@ -117,13 +145,3 @@ void Game::processEvents(){
         getDirectionInput(*event);
     }
 }
-
-/*
- FACI CA MANCAREA SA FIE PLASATA RANDOM PE UNA DINTRE PATRATELE (faci total lungime pixel / cate patratele is si dupa scazi jumate de patratica la ambele coordonate)
- FACI CA SNAKE SA SE MISTE CONTINUU DAR SA PRIMEASCA INPUT PE UN CLOCK (sau faci ca miscatul sa se intample de mai multe ori decat check de directie)
- LA SNAKE FACI CA ULTIMA BUCATA DINAINTE SA SE TELEPORTEZE IN POZITIA LA URMATOAREA BUCATA
-
-
-
-
-*/

@@ -17,6 +17,8 @@ class Game{
         sf::Clock gameClock;
         sf::Texture bgTexture;
         std::optional<sf::Sprite> bgSprite;
+        sf::Font font;
+        std::optional<sf::Text> gameOverText;
 
         bool gameInit();
 
@@ -25,6 +27,8 @@ class Game{
         void handleClose(const sf::Event& event);
         bool foodEaten();
         void checkGameOver();
+        bool endScreenInit();
+        void showEndScreen();
         
         void update(float dt);
         
